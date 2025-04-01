@@ -1,0 +1,72 @@
+/* Custom styles for Zerouali Residence Management System */
+
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Header dropdown animation */
+#dropdown-menu {
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+/* Feature cards hover effect */
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Language switcher active state */
+.language-switcher.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark mode support */
+.dark-mode {
+    background-color: #1a202c;
+    color: #f7fafc;
+}
+
+.dark-mode .card {
+    background-color: #2d3748;
+    color: #f7fafc;
+}
+
+/* Print styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+}
