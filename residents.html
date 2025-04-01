@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Management | Zerouali Residence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="resident-documents.js"></script>
+    <script type="module" src="resident-vehicles.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <div id="header"></div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-64 bg-blue-800 text-white min-h-screen"></div>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">Resident Management</h1>
+                <button onclick="openResidentModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                    <i class="fas fa-plus"></i>
+                    <span>New Resident</span>
+                </button>
+            </div>
+
+            <!-- Include resident modal -->
+            <div id="modalContainer"></div>
+
+            <!-- Resident details tabs -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="border-b border-gray-200">
+                    <nav class="flex -mb-px">
+                        <button id="profileTab" class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm border-blue-500 text-blue-600" onclick="showSection('profile')">
+                            <i class="fas fa-user mr-2"></i>Profile
+                        </button>
+                        <button id="documentsTab" class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" onclick="showSection('documents')">
+                            <i class="fas fa-file-alt mr-2"></i>Documents
+                        </button>
+                        <button id="vehiclesTab" class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" onclick="showSection('vehicles')">
+                            <i class="fas fa-car mr-2"></i>Vehicles
+                        </button>
+                        <button id="historyTab" class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" onclick="showSection('history')">
+                            <i class="fas fa-history mr-2"></i>History
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Profile section -->
+            <div id="profileSection" class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resident</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apartment</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Move-in Date</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="residentsTable">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Documents section -->
+            <div id="documentsSection" class="bg-white rounded-lg shadow overflow-hidden hidden">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Resident Documents</h3>
+                        <button onclick="openDocumentUploadModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Upload
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Upload Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="documentsTable">
+                                <!-- Filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicles section -->
+            <div id="vehiclesSection" class="bg-white rounded-lg shadow overflow-hidden hidden">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Registered Vehicles</h3>
+                        <button onclick="openVehicleModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Add Vehicle
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate Number</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Make/Model</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="vehiclesTable">
+                                <!-- Filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History section -->
+            <div id="historySection" class="bg-white rounded-lg shadow overflow-hidden hidden">
+                <div class="p-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Resident History</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recorded By</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="historyTable">
+                                <!-- Filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load components
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('sidebar').innerHTML = html);
+
+        // Load resident modal
+        fetch('resident-modal.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('modalContainer').innerHTML = html);
+
+        // Tab navigation
+        function showSection(section) {
+            document.querySelectorAll('[id$="Section"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`${section}Section`).classList.remove('hidden');
+            
+            // Update tab styling
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            document.getElementById(`${section}Tab`).classList.add('border-blue-500', 'text-blue-600');
+            document.getElementById(`${section}Tab`).classList.remove('border-transparent', 'text-gray-500');
+        }
+
+        // Load and display resident data
+        async function loadResidents() {
+            // In a real app, this would fetch from an API
+            const residents = [
+                {
+                    id: 1,
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john@example.com',
+                    phone: '+1 234 567 890',
+                    apartment: '3E-02',
+                    moveInDate: '2023-05-15',
+                    emergencyContact: 'Jane Doe',
+                    emergencyPhone: '+1 987 654 321'
+                },
+                {
+                    id: 2,
+                    firstName: 'Sarah',
+                    lastName: 'Johnson',
+                    email: 'sarah@example.com',
+                    phone: '+1 345 678 901',
+                    apartment: '2E-01',
+                    moveInDate: '2023-07-20',
+                    emergencyContact: 'Mike Johnson',
+                    emergencyPhone: '+1 876 543 210'
+                }
+            ];
+
+            const table = document.getElementById('residentsTable');
+            table.innerHTML = residents.map(resident => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-user text-blue-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${resident.firstName} ${resident.lastName}</div>
+                                <div class="text-sm text-gray-500">${resident.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${resident.phone}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${resident.apartment}</div>
+                        <div class="text-sm text-gray-500">${resident.moveInDate}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${resident.emergencyContact}</div>
+                        <div class="text-sm text-gray-500">${resident.emergencyPhone}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadResidents();
+            // Load other data as needed
+        });
+    </script>
+</body>
+</html>
