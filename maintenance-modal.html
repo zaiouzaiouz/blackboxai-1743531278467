@@ -1,0 +1,133 @@
+<div id="maintenanceModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+
+        <!-- Modal content -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <i class="fas fa-tools text-blue-600"></i>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            New Maintenance Request
+                        </h3>
+                        <div class="mt-4">
+                            <form id="maintenanceForm">
+                                <div class="grid grid-cols-1 gap-y-4 gap-x-6 sm:grid-cols-6">
+                                    <div class="sm:col-span-6">
+                                        <label for="apartment" class="block text-sm font-medium text-gray-700">Apartment</label>
+                                        <select id="apartment" name="apartment" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                            <option value="">Select Apartment</option>
+                                            <option>RDC-01</option>
+                                            <option>RDC-02</option>
+                                            <option>RDC-03</option>
+                                            <option>1E-01</option>
+                                            <option>1E-02</option>
+                                            <option>1E-03</option>
+                                            <option>2E-01</option>
+                                            <option>2E-02</option>
+                                            <option>2E-03</option>
+                                            <option>3E-01</option>
+                                            <option>3E-02</option>
+                                            <option>3E-03</option>
+                                            <option>4E-01</option>
+                                            <option>4E-02</option>
+                                            <option>4E-03</option>
+                                            <option>5E-01</option>
+                                            <option>5E-02</option>
+                                            <option>5E-03</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="sm:col-span-6">
+                                        <label for="issue" class="block text-sm font-medium text-gray-700">Issue Description</label>
+                                        <textarea id="issue" name="issue" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" required></textarea>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                                        <select id="type" name="type" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                                            <option value="">Select Type</option>
+                                            <option value="PLUMBING">Plumbing</option>
+                                            <option value="ELECTRICAL">Electrical</option>
+                                            <option value="STRUCTURAL">Structural</option>
+                                            <option value="APPLIANCE">Appliance</option>
+                                            <option value="CLEANING">Cleaning</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                                        <select id="priority" name="priority" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                                            <option value="">Select Priority</option>
+                                            <option value="URGENT">Urgent</option>
+                                            <option value="HIGH">High</option>
+                                            <option value="MEDIUM">Medium</option>
+                                            <option value="LOW">Low</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" onclick="submitMaintenanceRequest()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Submit Request
+                </button>
+                <button type="button" onclick="closeMaintenanceModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal control functions
+    function openMaintenanceModal() {
+        document.getElementById('maintenanceModal').classList.remove('hidden');
+    }
+
+    function closeMaintenanceModal() {
+        document.getElementById('maintenanceModal').classList.add('hidden');
+    }
+
+    // Form submission
+    async function submitMaintenanceRequest() {
+        const form = document.getElementById('maintenanceForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const formData = new FormData(form);
+        const requestData = Object.fromEntries(formData.entries());
+        
+        const { logMaintenanceRequest } = await import('./maintenance.js');
+        logMaintenanceRequest(
+            requestData.apartment,
+            requestData.issue,
+            requestData.priority,
+            requestData.type
+        );
+
+        closeMaintenanceModal();
+        alert('Maintenance request submitted successfully!');
+        window.location.reload();
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('maintenanceModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeMaintenanceModal();
+        }
+    });
+</script>
