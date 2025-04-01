@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance | Zerouali Residence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="maintenance.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header will be loaded here -->
+    <div id="header"></div>
+
+    <div class="flex">
+        <!-- Sidebar will be loaded here -->
+        <div id="sidebar" class="w-64 bg-blue-800 text-white min-h-screen"></div>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Maintenance Management</h1>
+                <button onclick="openMaintenanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                    <i class="fas fa-plus"></i>
+                    <span>New Request</span>
+                </button>
+            </div>
+
+            <!-- Include maintenance modal -->
+            <div id="modalContainer"></div>
+
+            <!-- Maintenance requests table -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apartment</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="maintenanceTable">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer will be loaded here -->
+    <div id="footer"></div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load sidebar component
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar').innerHTML = html;
+            });
+
+        // Load maintenance modal
+        fetch('maintenance-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('modalContainer').innerHTML = html;
+            });
+
+        // Load and display maintenance requests
+        async function loadMaintenanceRequests() {
+            const { getMaintenanceHistory, maintenancePriorities } = await import('./maintenance.js');
+            const requests = getMaintenanceHistory();
+            
+            const table = document.getElementById('maintenanceTable');
+            table.innerHTML = requests.map(request => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">${request.apartment}</td>
+                    <td class="px-6 py-4">${request.issue}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${request.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${request.priority === 'URGENT' ? 'bg-red-100 text-red-800' : 
+                              request.priority === 'HIGH' ? 'bg-orange-100 text-orange-800' :
+                              request.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-blue-100 text-blue-800'}">
+                            ${maintenancePriorities[request.priority]?.label || request.priority}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${request.status}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${new Date(request.timestamp).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                        <button class="text-green-600 hover:text-green-900 mr-3"><i class="fas fa-check"></i></button>
+                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMaintenanceRequests();
+        });
+    </script>
+</body>
+</html>
